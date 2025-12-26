@@ -85,7 +85,6 @@
       height: 40px;
       width: auto;
     }
-    /* 使っていなくても残してよい（画面には出ません） */
     .brand-text-main {
       font-size: 20px;
       font-weight: 700;
@@ -672,8 +671,8 @@
     @media (max-width: 900px) {
       .hero-inner {
         grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
       }
-      .hero-panel { order: -1; }
       .about-grid {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -683,6 +682,7 @@
         grid-template-columns: minmax(0, 1fr);
       }
     }
+
     @media (max-width: 720px) {
       nav { display: none; }
       .nav-toggle {
@@ -690,10 +690,14 @@
         flex-direction: column;
       }
       .hero {
-        padding-top: 50px;
+        padding-top: 52px;
+        padding-bottom: 44px;
       }
       .hero-title {
         font-size: 28px;
+      }
+      .hero-lead {
+        font-size: 15px;
       }
       section.section {
         padding: 48px 20px;
@@ -703,6 +707,7 @@
         align-items: flex-start;
       }
     }
+
     @media (min-width: 721px) {
       .nav-mobile { display: none !important; }
     }
@@ -754,7 +759,7 @@
       <div class="reveal-left">
         <div class="hero-eyebrow">STUDENT-LED HEALTHCARE PROJECT</div>
         <h1 class="hero-title">
-          勘と経験に頼る医療から、<span class="highlight">データ駆動の医療</span>へ。
+          勘と経験に頼る医療から、<span class="highlight">データ駆動の医療へ。</span>
         </h1>
         <p class="hero-lead">
           CareNexus は、医療現場とデータ・AI をつなぎ、
