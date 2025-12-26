@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>CareNexus | 医療とデータの接点をつくる</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="CareNexus は、医療現場とデータ・AIの接点をつくり、持続可能な医療インフラを模索するプロジェクトチームです。"
+  />
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-soft: #1f2937;
+      --accent: #22c55e;
+      --accent-soft: #ecfdf3;
+      --ink: #0f172a;
+      --ink-soft: #4b5563;
+      --bg: #ffffff;
+      --bg-soft: #f3f4f6;
+      --border-soft: rgba(148, 163, 184, 0.35);
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.26s ease-out;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Noto Sans JP", sans-serif;
+      font-size: 17px;
+      color: var(--ink);
+      background: var(--bg-soft);
+      line-height: 1.7;
+      scroll-behavior: smooth;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scroll-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0;
+      z-index: 60;
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+      transform-origin: left;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid rgba(209, 213, 219, 0.7);
+    }
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      height: 40px;
+      width: auto;
+    }
+    .brand-text-main {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .brand-text-sub {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 15px;
+      color: #111827;
+    }
+    nav a {
+      position: relative;
+      padding-bottom: 2px;
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #4f46e5, #22c55e);
+      transition: var(--transition-fast);
+    }
+    nav a:hover { color: #111827; }
+    nav a:hover::after { width: 100%; }
+
+    .nav-cta {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: var(--navy);
+      color: #f9fafb;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.4);
+      transition: var(--transition-med);
+    }
+    .nav-cta span.icon {
+      font-size: 14px;
+      transform: translateY(1px);
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.6);
+      background: #020617;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle-bar {
+      width: 22px;
+      height: 2px;
+      border-radius: 999px;
+      background: #111827;
+      margin: 3px 0;
+      transition: 0.18s;
+    }
+    .nav-open .nav-toggle-bar:nth-child(1) {
+      transform: translateY(5px) rotate(45deg);
+    }
+    .nav-open .nav-toggle-bar:nth-child(2) { opacity: 0; }
+    .nav-open .nav-toggle-bar:nth-child(3) {
+      transform: translateY(-5px) rotate(-45deg);
+    }
+
+    .nav-mobile {
+      display: none;
+      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      background: #ffffff;
+    }
+    .nav-mobile-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 8px 20px 12px;
+      font-size: 15px;
+      color: #111827;
+    }
+    .nav-mobile-inner a {
+      display: block;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(209, 213, 219, 0.9);
+      cursor: pointer;
+    }
+    .nav-mobile-inner a:last-child { border-bottom: none; }
+    .nav-mobile-inner .nav-mobile-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #f9fafb;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.6);
+    }
+
+    /* Hero */
+    .hero {
+      background:
+        radial-gradient(circle at 0% 0%, #e0f2fe 0, #f9fafb 45%, #eef2ff 100%);
+      border-bottom: 1px solid rgba(209, 213, 219, 0.6);
+      padding: 68px 20px 60px;
+    }
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 34px;
+      line-height: 1.35;
+      margin: 0 0 16px;
+    }
+    .hero-title span.highlight {
+      background: linear-gradient(120deg, #22c55e, #4ade80, #bef264);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-lead {
+      font-size: 17px;
+      color: #374151;
+      margin: 0 0 18px;
+      max-width: 520px;
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .tag {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #111827;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(209, 213, 219, 0.8);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .btn-primary {
+      padding: 11px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: var(--navy);
+      color: #f9fafb;
+      font-size: 15px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-med);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+    }
+    .btn-primary span.icon {
+      font-size: 17px;
+      transform: translateY(1px);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.6);
+      background: #020617;
+    }
+    .btn-ghost {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: transparent;
+      color: #111827;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: var(--transition-med);
+    }
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #9ca3af;
+    }
+    .hero-note {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .hero-panel {
+      border-radius: 26px;
+      padding: 20px 20px 18px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.32), transparent 55%),
+        linear-gradient(135deg, #020617, #020617 35%, #020617 100%);
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.52);
+      position: relative;
+      overflow: hidden;
+      color: #e5e7eb;
+      font-size: 15px;
+    }
+    .hero-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .hero-tag-main {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+    .hero-tag-pill {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+    .hero-metric-block {
+      border-radius: 14px;
+      padding: 11px 12px;
+      background: rgba(15, 23, 42, 0.96);
+      margin-bottom: 8px;
+    }
+    .hero-metric-label {
+      color: #9ca3af;
+      margin-bottom: 3px;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .hero-metric-value {
+      font-size: 17px;
+      font-weight: 700;
+      color: #f9fafb;
+      margin-bottom: 4px;
+    }
+    .hero-metric-foot {
+      margin-top: 0;
+      font-size: 13px;
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+    .hero-metric-foot strong {
+      font-weight: 600;
+      color: #bbf7d0;
+    }
+    .hero-panel-foot {
+      border-top: 1px dashed rgba(148, 163, 184, 0.6);
+      padding-top: 8px;
+      font-size: 12px;
+      color: #d1d5db;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+    }
+    .orbital {
+      position: absolute;
+      inset: auto -26px -32px auto;
+      width: 130px;
+      height: 130px;
+      opacity: 0.26;
+      pointer-events: none;
+      animation: float 11s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translate3d(0,0,0); }
+      50% { transform: translate3d(-8px,-6px,0); }
+      100% { transform: translate3d(0,0,0); }
+    }
+
+    /* Sections */
+    section.section {
+      padding: 60px 20px;
+      background: #ffffff;
+    }
+    section.section.alt { background: #f9fafb; }
+
+    .section-head {
+      max-width: 1120px;
+      margin: 0 auto 26px;
+      padding: 0 20px;
+    }
+    .section-kicker {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 26px;
+      margin: 0 0 10px;
+    }
+    .section-sub {
+      font-size: 15px;
+      color: #6b7280;
+      max-width: 650px;
+    }
+
+    .about-grid {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 26px;
+      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      padding-top: 24px;
+    }
+    .about-block {
+      font-size: 15px;
+    }
+    .about-label {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+    .about-heading {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .about-body {
+      font-size: 15px;
+      color: #4b5563;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #111827;
+      background: #eef2ff;
+    }
+
+    /* Focus / Vision */
+    .focus-line {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 30px;
+      align-items: flex-start;
+    }
+    .focus-main-title {
+      font-size: 22px;
+      margin: 0 0 8px;
+    }
+    .focus-main-sub {
+      font-size: 15px;
+      color: #6b7280;
+      max-width: 440px;
+    }
+    .focus-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .focus-tag {
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #374151;
+      background: #ffffff;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+    }
+    .timeline {
+      position: relative;
+      padding-left: 18px;
+      border-left: 1px solid rgba(148, 163, 184, 0.7);
+      margin-top: 6px;
+    }
+    .timeline-item {
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -10px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 2px solid var(--accent);
+    }
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .timeline-text {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* Projects */
+    .project-grid {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: flex-start;
+      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      padding-top: 24px;
+    }
+    .project-label {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+    .project-title {
+      font-size: 21px;
+      margin: 0 0 8px;
+    }
+    .project-lead {
+      font-size: 15px;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      font-size: 13px;
+      color: #166534;
+    }
+    .project-mini {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+    .project-card {
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      background: #ffffff;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    /* Contact */
+    .contact-wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: flex-start;
+      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      padding-top: 24px;
+    }
+    .contact-main {
+      font-size: 15px;
+      color: #4b5563;
+    }
+    .contact-list {
+      margin: 6px 0 0;
+      padding-left: 1.1em;
+      font-size: 15px;
+    }
+    .contact-card {
+      padding: 10px 0;
+      font-size: 15px;
+      color: #111827;
+      border-left: 3px solid var(--navy);
+      padding-left: 14px;
+      background: #ffffff;
+    }
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.8);
+      background: #ffffff;
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+      margin-top: 8px;
+      cursor: pointer;
+      color: #111827;
+    }
+    .contact-email:hover {
+      background: #f1f5f9;
+      border-color: #0f172a;
+    }
+    .contact-note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      background: #f9fafb;
+      color: #6b7280;
+      font-size: 12px;
+      padding: 16px 20px 20px;
+    }
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Reveal */
+    .reveal, .reveal-left, .reveal-right {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: 0.45s ease-out;
+    }
+    .reveal.in-view,
+    .reveal-left.in-view,
+    .reveal-right.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left { transform: translateX(-18px); }
+    .reveal-right { transform: translateX(18px); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-panel { order: -1; }
+      .about-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .focus-line,
+      .project-grid,
+      .contact-wrap {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 720px) {
+      nav { display: none; }
+      .nav-toggle {
+        display: inline-flex;
+        flex-direction: column;
+      }
+      .hero {
+        padding-top: 50px;
+      }
+      .hero-title {
+        font-size: 28px;
+      }
+      section.section {
+        padding: 48px 20px;
+      }
+      .hero-panel-foot {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    @media (min-width: 721px) {
+      .nav-mobile { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="scroll-bar" id="scroll-bar"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <img src="./carenexus-logo.png" alt="CareNexus ロゴ" class="brand-logo" />
+        <div>
+          <div class="brand-text-main">CareNexus</div>
+          <div class="brand-text-sub">医療とデータの接点をつくる</div>
+        </div>
+      </div>
+      <nav>
+        <a onclick="scrollToId('about')">About</a>
+        <a onclick="scrollToId('vision')">Vision</a>
+        <a onclick="scrollToId('projects')">Projects</a>
+        <a onclick="scrollToId('contact')">Contact</a>
+        <button class="nav-cta" onclick="scrollToId('contact')">
+          協力・連携のご相談
+          <span class="icon">↗</span>
+        </button>
+      </nav>
+      <button class="nav-toggle" aria-label="メニュー" onclick="toggleMobileNav(this)">
+        <div class="nav-toggle-bar"></div>
+        <div class="nav-toggle-bar"></div>
+        <div class="nav-toggle-bar"></div>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile">
+      <div class="nav-mobile-inner">
+        <a onclick="scrollToId('about'); closeMobileNav();">About</a>
+        <a onclick="scrollToId('vision'); closeMobileNav();">Vision</a>
+        <a onclick="scrollToId('projects'); closeMobileNav();">Projects</a>
+        <a onclick="scrollToId('contact'); closeMobileNav();">Contact</a>
+        <a class="nav-mobile-cta" onclick="scrollToId('contact'); closeMobileNav();">
+          協力・連携のご相談
+          <span>↗</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="reveal-left">
+        <div class="hero-eyebrow">STUDENT-LED HEALTHCARE PROJECT</div>
+        <h1 class="hero-title">
+          「勘と経験の医療」から、<span class="highlight">データ駆動の医療</span>へ。
+        </h1>
+        <p class="hero-lead">
+          CareNexus は、医療現場とデータ・AI をつなぎ、
+          在宅医療・地域医療を中心に「持続可能なケアのかたち」を探るプロジェクトチームです。
+          特定のプロダクトに閉じず、テーマごとに複数の取り組みを展開していきます。
+        </p>
+        <div class="hero-tags">
+          <span class="tag">医療 × データ</span>
+          <span class="tag">AI 活用</span>
+          <span class="tag">在宅医療・訪問看護</span>
+          <span class="tag">学生発プロジェクト</span>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="scrollToId('about')">
+            CareNexus とは
+            <span class="icon">↓</span>
+          </button>
+          <button class="btn-ghost" onclick="scrollToId('projects')">
+            進行中のプロジェクトを見る
+            <span class="icon">→</span>
+          </button>
+        </div>
+        <div class="hero-note">
+          ※ 現在は構想・検証フェーズです。正式なサービス提供前の段階となります。
+        </div>
+      </div>
+
+      <div class="hero-panel reveal-right">
+        <div class="hero-panel-header">
+          <div class="hero-tag-main">CareNexus Snapshot</div>
+          <div class="hero-tag-pill">Early Stage</div>
+        </div>
+        <div class="hero-metric-block">
+          <div class="hero-metric-label">今、特に向き合っている問い</div>
+          <div class="hero-metric-value">在宅 × 情報の断片化</div>
+          <div class="hero-metric-foot">
+            訪問していない時間の情報が見えにくいままの在宅医療。
+            そのブラックボックスを、データとワークフロー設計でどう埋めるか。
+          </div>
+        </div>
+        <div class="hero-metric-block">
+          <div class="hero-metric-label">フィールド</div>
+          <div class="hero-metric-foot">
+            在宅医療 / 訪問看護 / 地域包括ケア<br />
+            まずは「在宅高齢者 × 訪問看護ステーション」から着手しています。
+          </div>
+        </div>
+        <div class="hero-metric-block">
+          <div class="hero-metric-label">現在の主なプロジェクト</div>
+          <div class="hero-metric-foot">
+            <strong>Project 01：CareNexus AI</strong><br />
+            訪問看護ステーション向けの経営OS。
+            記録・加算算定・人材マネジメントを AI で下支えし、
+            「頑張っているのに利益が残らない」構造に切り込みます。
+          </div>
+        </div>
+        <div class="hero-panel-foot">
+          <span>プロダクトはあくまで手段。</span>
+          <span>目指すのは、医療現場とデータが無理なくつながる社会インフラです。</span>
+        </div>
+        <svg class="orbital" viewBox="0 0 160 160">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#93c5fd" />
+              <stop offset="50%" stop-color="#4ade80" />
+              <stop offset="100%" stop-color="#22c55e" />
+            </linearGradient>
+          </defs>
+          <circle cx="80" cy="80" r="54" fill="none" stroke="url(#grad)" stroke-width="1.4" />
+          <circle cx="80" cy="80" r="36" fill="none" stroke="rgba(148,163,184,0.5)" stroke-width="1" />
+          <circle cx="36" cy="80" r="3" fill="#bfdbfe" />
+          <circle cx="118" cy="52" r="2.4" fill="#4ade80" />
+          <circle cx="120" cy="108" r="2" fill="#a5b4fc" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="section-head">
+      <div class="section-kicker">ABOUT</div>
+      <h2 class="section-title">私たちが変えたいもの</h2>
+      <p class="section-sub">
+        一つのサービスを売る会社ではなく、「医療とデータの接点」をデザインするプロジェクトチームとして活動しています。
+      </p>
+    </div>
+    <div class="about-grid">
+      <div class="about-block reveal">
+        <div class="about-label">WHY</div>
+        <div class="about-heading">見えないままの医療の時間</div>
+        <p class="about-body">
+          在宅・地域医療では、紙・電話・個別システムに情報が分かれ、
+          「訪問していない時間」や「職種間のすきま」がブラックボックスになりがちです。
+        </p>
+      </div>
+      <div class="about-block reveal">
+        <div class="about-label">WHAT</div>
+        <div class="about-heading">データとAIで下支えする</div>
+        <p class="about-body">
+          判断そのものではなく、記録・情報整理・算定チェックなどの
+          「下ごしらえ」をデータとAIに任せることで、
+          人がケアと対話に集中できる状態を目指します。
+        </p>
+      </div>
+      <div class="about-block reveal">
+        <div class="about-label">WHO</div>
+        <div class="about-heading">CareNexus チーム</div>
+        <p class="about-body">
+          慶應義塾大学看護医療学部の学生を中心に、
+          医師・看護師・事業家・エンジニア・研究者の方々に
+          助言をいただきながら進めているプロジェクトです。
+        </p>
+        <div class="pill-row">
+          <span class="pill">在宅医療</span>
+          <span class="pill">訪問看護</span>
+          <span class="pill">医療 × データ</span>
+          <span class="pill">学生発プロジェクト</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision / Approach -->
+  <section class="section alt" id="vision">
+    <div class="section-head">
+      <div class="section-kicker">VISION &amp; APPROACH</div>
+      <h2 class="section-title">「現場」「データ」「継続性」を外さない。</h2>
+      <p class="section-sub">
+        どのプロジェクトでも、この3つの視点から設計します。
+      </p>
+    </div>
+    <div class="focus-line">
+      <div class="reveal-left">
+        <h3 class="focus-main-title">医療を、持続可能な社会インフラとして残すために。</h3>
+        <p class="focus-main-sub">
+          人口減少・医療者不足の中でも、質の高いケアを続けられるように。
+          CareNexus は「技術ありき」ではなく、現場と制度の両方を見ながら解を探ります。
+        </p>
+        <div class="focus-tags">
+          <span class="focus-tag">現場起点</span>
+          <span class="focus-tag">データ駆動</span>
+          <span class="focus-tag">小さく試す</span>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">現場から始める（Field）</div>
+            <div class="timeline-text">
+              在宅医療・訪問看護・地域包括ケアなど、病院の外にある課題を正面から扱います。
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">データとAIは「下支え」（Data &amp; AI）</div>
+            <div class="timeline-text">
+              判断の代替ではなく、情報整理・記録作成・算定チェックなど、
+              現場の負担が大きい部分を支える役割として活用します。
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">小さく試し、実際に使える形へ（Approach）</div>
+            <div class="timeline-text">
+              ヒアリング → 仮説 → プロトタイプ → 振り返りのサイクルで、
+              机上の空論にしない進め方を大切にしています。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section" id="projects">
+    <div class="section-head">
+      <div class="section-kicker">PROJECTS</div>
+      <h2 class="section-title">現在進行中のプロジェクト</h2>
+      <p class="section-sub">
+        CareNexus では、複数のテーマでプロジェクトを立ち上げていく予定です。
+        その第1弾が、訪問看護ステーション向け経営OS「CareNexus AI」です。
+      </p>
+    </div>
+    <div class="project-grid">
+      <div class="reveal-left">
+        <div class="project-label">PROJECT 01</div>
+        <h3 class="project-title">CareNexus AI – 訪問看護経営 OS</h3>
+        <p class="project-lead">
+          人手不足の訪問看護業界において、「忙しさ」ではなく
+          「収益の取りこぼし」「生産性」「人材流出」という
+          経済的損失にフォーカスした経営支援ソフトウェアです。
+        </p>
+        <div class="chip-row">
+          <span class="chip">AI 記録システム</span>
+          <span class="chip">AI 加算算定エンジン</span>
+          <span class="chip">離職予兆検知</span>
+          <span class="chip">既存カルテに重ねがけ</span>
+        </div>
+        <p class="project-mini">
+          ※ 現在 α 版の設計・検証フェーズ。実証パートナーとなっていただける訪問看護ステーション様を募集しています。
+        </p>
+      </div>
+      <div class="project-card reveal-right">
+        <strong>どんな課題を解決したいか</strong><br />
+        ・本来請求できたはずの加算が「記録のギャップ」で埋没してしまう問題<br />
+        ・監査に備えた防御的な記録作成で、看護師の時間が奪われる問題<br />
+        ・スタッフ負荷を把握できず、突然の離職で経営が揺らぐ問題<br /><br />
+        これらに対して、AI が記録案や算定案を提示し、
+        人が最終確認する「Human-in-the-loop」な UI 設計で、
+        医療安全と実務を両立することを目指しています。
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section alt" id="contact">
+    <div class="section-head">
+      <div class="section-kicker">CONTACT</div>
+      <h2 class="section-title">協力・連携のご相談</h2>
+      <p class="section-sub">
+        現場・制度・技術のそれぞれの視点から、一緒に考えてくださる方を募集しています。
+      </p>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-main reveal-left">
+        <h3 style="margin:0 0 10px;font-size:18px;">特にお話したいと考えている方</h3>
+        <ul class="contact-list">
+          <li>在宅医療・訪問看護・地域包括ケアの現場で働かれている方</li>
+          <li>医療情報・個人情報保護・診療報酬に詳しい専門職・研究者の方</li>
+          <li>医療・ヘルスケア領域での IT / AI 活用に関心のある企業・エンジニアの方</li>
+        </ul>
+        <p style="font-size:15px;margin-top:12px;color:#6b7280;">
+          「まだアイデア段階だけど」「少しだけ意見を伝えたい」くらいの温度感でも問題ありません。
+          一度オンラインでお話させていただけると嬉しいです。
+        </p>
+      </div>
+      <div class="contact-card reveal-right">
+        <h3 style="margin:0 0 8px;font-size:18px;">ご連絡方法</h3>
+        <p style="font-size:15px;margin:6px 0;">
+          下記メールアドレス宛に、「CareNexus について」と件名を添えてご連絡ください。
+        </p>
+        <a class="contact-email" href="mailto:example@keio.jp">
+          <span>✉</span>
+          <span>example@keio.jp</span>
+        </a>
+        <p class="contact-note">
+          ※ 実際に使用する代表メールアドレスに差し替えてください。
+          必要に応じて、お問い合わせフォームや資料へのリンクも追加いただけます。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© <span id="year"></span> CareNexus</div>
+      <div>CareNexus Project Team</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // 年表示
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // スムーススクロール
+  function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  // モバイルナビ
+  function toggleMobileNav(btn) {
+    const nav = document.getElementById("nav-mobile");
+    const open = nav.style.display === "block";
+    nav.style.display = open ? "none" : "block";
+    if (btn) {
+      if (open) btn.classList.remove("nav-open");
+      else btn.classList.add("nav-open");
+    }
+  }
+  function closeMobileNav() {
+    const nav = document.getElementById("nav-mobile");
+    nav.style.display = "none";
+    const toggles = document.getElementsByClassName("nav-toggle");
+    if (toggles[0]) toggles[0].classList.remove("nav-open");
+  }
+
+  // スクロールバー
+  const scrollBar = document.getElementById("scroll-bar");
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) : 0;
+    scrollBar.style.width = (progress * 100) + "%";
+  });
+
+  // スクロール時のフェードイン
+  const reveals = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.18 }
+  );
+  reveals.forEach((el) => io.observe(el));
+</script>
+</body>
+</html>
